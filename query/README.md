@@ -14,7 +14,7 @@ Known issues:
 ## Add and Delete
 
 
-And POST request should have following format:
+A POST request should have following format:
 
 ``` json
 {
