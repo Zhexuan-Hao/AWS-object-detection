@@ -15,6 +15,8 @@ Known issues:
 
 ### Format
 
+Follow the requirements in `FIT5225_Assignment2__2023_.pdf`.
+
 * URL: https://bolnwx1949.execute-api.us-east-1.amazonaws.com/alpha/tags
 * Method: POST
 * headers: Content-type: application/json
@@ -33,3 +35,4 @@ Known issues:
     ]
 }
 ```
+> “type” can be set to 1 or 0 for adding or removing a tag, respectively. The above request adds two "person" tags to the image and one "alex" tag to the tag list of the image in the URL: If “type” is set to 0, the tags are removed from the tag list of the image up to the maximum of either the available tags or the count value. For example, if the count for the tag person is 2 and only one tag of person is in the tag list, we remove the only existing tag. If a tag is not included in the list of tags requested for deletion, you can simply ignore it in the request. Please note that if “count” is not specified in the request, the default value of 1 should be considered.
