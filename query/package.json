@@ -1,0 +1,17 @@
+{
+  "name": "fit5225-a2",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.344.0",
+    "@aws-sdk/client-s3": "^3.341.0",
+    "aws-sdk": "^2.1386.0"
+  }
+}
