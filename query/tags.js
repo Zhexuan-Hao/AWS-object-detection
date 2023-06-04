@@ -5,8 +5,8 @@ const dClient = new DynamoDBClient({});
  * @param {string} name
  * @param {number} count
  */
-function Tag(name, count) {
-    this.name = name;
+function Tag(tag, count) {
+    this.tag = tag;
     this.count = count;
 }
 
@@ -53,8 +53,7 @@ async function getItem(tags) {
         for (const tagInDb of item.Tags.M.objects.L) {
             const key = tagInDb.M.label.S.toLowerCase();
             if (countMap.has(key)) {
-                const tmp = countMap.get(key);
-                tmp++;
+                const tmp = countMap.get(key) + 1;
                 countMap.set(key, tmp);
             } else {
                 countMap.set(key, 1);
@@ -64,7 +63,7 @@ async function getItem(tags) {
         let isValid = true;
         for (const tag of tags) {
             if (
-                !(countMap.has(tag.name) && countMap.get(tag.name) >= tag.count)
+                !(countMap.has(tag.tag) && countMap.get(tag.tag) >= tag.count)
             ) {
                 isValid = false;
                 break;
