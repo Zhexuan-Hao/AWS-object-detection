@@ -48,8 +48,8 @@ async function getItem(tags) {
     });
     const response = await dClient.send(command);
     let rlt = [];
-    let countMap = new Map();
     for (const item of response.Items) {
+        let countMap = new Map();
         for (const tagInDb of item.Tags.M.objects.L) {
             const key = tagInDb.M.label.S.toLowerCase();
             if (countMap.has(key)) {
@@ -90,7 +90,9 @@ const handler = async (event) => {
     const headers = { "Content-Type": "application/json" };
 
     const querystringMap = event.queryStringParameters;
+    console.log("querystringMap:", querystringMap)
     const tags = parseQuerystring(querystringMap);
+    console.log("tags:", tags);
 
     body = await getItem(tags);
     console.log(body);
