@@ -71,13 +71,18 @@ async function getItem(tags) {
         }
 
         if (isValid) {
-            const imageInfo = new ImageInfo(
-                item.URL.S,
-                item.Key.S,
-                item.Tags.M.objects.L.map((v) =>
-                    v.M.label.S.toLocaleLowerCase()
-                )
-            );
+            const rltCountMap = new Map();
+            for (const tagItem of item.Tags.M.objects.L) {
+                const name = tagItem.M.label.S.toLocaleLowerCase();
+                if (rltCountMap.has(name)) {
+                    const tmp = rltCountMap.get(name) + 1;
+                    rltCountMap.set(name, tmp);
+                } else {
+                    rltCountMap.set(name, 1);
+                }
+            }
+            const tags = Array.from(rltCountMap, ([k, v]) => new Tag(k, v));
+            const imageInfo = new ImageInfo(item.URL.S, item.Key.S, tags);
             rlt.push(imageInfo);
         }
     }
@@ -90,7 +95,7 @@ const handler = async (event) => {
     const headers = { "Content-Type": "application/json" };
 
     const querystringMap = event.queryStringParameters;
-    console.log("querystringMap:", querystringMap)
+    console.log("querystringMap:", querystringMap);
     const tags = parseQuerystring(querystringMap);
     console.log("tags:", tags);
 
