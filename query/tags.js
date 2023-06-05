@@ -21,7 +21,7 @@ function ImageInfo(url, filename, tags) {
  * @return {Array<Tag>}
  */
 function parseQuerystring(querystringMap) {
-    if (querystringMap === undefined) {
+    if (querystringMap === null) {
         return [];
     }
     const tags = [];
@@ -82,8 +82,6 @@ async function getItem(tags) {
         }
     }
     return rlt;
-    // // const tagsInDb = response.Items.map(v => v.Tags.M.objects.L)
-    // return response.Items;
 }
 
 const handler = async (event) => {
@@ -92,13 +90,8 @@ const handler = async (event) => {
     const headers = { "Content-Type": "application/json" };
 
     const querystringMap = event.queryStringParameters;
-
     const tags = parseQuerystring(querystringMap);
-    if (!tags || tags.length === 0) {
-        statusCode = "400";
-        body = { message: "Bad Request" };
-        return { statusCode, body, headers };
-    }
+
     body = await getItem(tags);
     console.log(body);
 
