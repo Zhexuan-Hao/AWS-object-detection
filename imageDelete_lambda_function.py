@@ -81,19 +81,19 @@ def lambda_handler(event, context):
     if (itemIsExistedDB == True and itemIsExistedS3 == True):
         return {
             'S3 image': 'Deleted',
-            'DynamoDB Item': 'Deleted'
+            'DynamoDB item': 'Deleted'
         }
     
     elif (itemIsExistedDB != True and itemIsExistedS3 == True):
         return {
             'S3 image': 'Not deleted',
-            'DynamoDB Item': 'Deleted'
+            'DynamoDB item': 'Deleted'
         }
     
     elif (itemIsExistedDB == True and itemIsExistedS3 == False):
         return {
             'S3 image': 'Deleted',
-            'DynamoDB Item': 'Not deleted'
+            'DynamoDB item': 'Not deleted'
         }
     
     elif (itemIsExistedDB != True and itemIsExistedS3 == False):
