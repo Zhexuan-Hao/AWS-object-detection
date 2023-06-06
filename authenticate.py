@@ -1,44 +1,39 @@
-import requests
-import os
-import time
+from browsermobproxy import Server
+from selenium import webdriver
 import re
 
-from selenium import webdriver
-
-
 def sign_in():
-    d_path = #file driver path here
-    driver = webdriver.Chrome(executable_path=d_path)
-    driver.get("https://tagtagimagestorage.auth.us-east-1.amazoncognito.com/login?client_id=7i9nfj1hsq4caaj77ifibn3cf2&response_type=token&scope=openid+profile&redirect_uri=https://620t1q00e4.execute-api.us-east-1.amazonaws.com/prod")
-    id_token=""
-    while(id_token==""):
-        for req in driver.requests:
-            if (req.response and req.response.headers["Location"]):
-                if(re.search(pattern="id_token=.*?&", string=req.response.headers["Location"])):
-                    id_token=re.search(pattern="id_token=(.*?)&", string=req.response.headers["Location"]).group(1)
-    print("\n id_token:"+id_token)
+    # Start the proxy server
+    server = Server("D:/browsermob-proxy")
+    server.start()
+    proxy = server.create_proxy()
+
+    # Configure the Selenium driver to use the proxy
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument('--proxy-server={0}'.format(proxy.proxy))
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+
+    # Start recording network traffic
+    proxy.new_har("har")
+
+    driver.get("https://fit5225assignment2.auth.us-east-1.amazoncognito.com/login?client_id=7o9kdhn6j4g1mq1r6eq0tj6bd7&response_type=token&scope=email+openid+phone&redirect_uri=https%3A%2F%2Fyxdcduftn7.execute-api.us-east-1.amazonaws.com%2Fprod")
+    id_token = ""
+    while (id_token == ""):
+        har = proxy.har  # Get the recorded HAR (HTTP Archive) data
+        for entry in har['log']['entries']:
+            if entry['response']['status'] == 302:
+                location = entry['response']['headers'].get('Location')
+                if location and re.search(pattern=r"id_token=.*?&", string=location):
+                    id_token = re.search(pattern=r"id_token=(.*?)&", string=location).group(1)
+                    break
+
+    print("\n id_token:" + id_token)
+
+    # Stop the proxy server and quit the driver
+    server.stop()
     driver.quit()
+
     return id_token
 
-def sign_up():
-    d_path = #file driver path here
-    driver = webdriver.Chrome(executable_path=d_path)
-    driver.get("https://tagtagimagestorage.auth.us-east-1.amazoncognito.com/signup?client_id=7i9nfj1hsq4caaj77ifibn3cf2&response_type=token&scope=openid+profile&redirect_uri=https://620t1q00e4.execute-api.us-east-1.amazonaws.com/prod")
-    id_token=""
-    while(id_token==""):
-        for req in driver.requests:
-            if (req.response and req.response.headers["Location"]):
-                if(re.search(pattern="id_token=.*?&", string=req.response.headers["Location"])):
-                    id_token=re.search(pattern="id_token=(.*?)&", string=req.response.headers["Location"]).group(1)
-    print("\n id_token:"+id_token)
-    driver.quit()
-    return id_token
-
-def sign_out(id_token):
-    d_path = #file driver path here
-    driver = webdriver.Chrome(executable_path=d_path)
-    url="https://tagtagimagestorage.auth.us-east-1.amazoncognito.com/logout?response_type=token&client_id=5d5keodtlciulndhmc4op051m6"
-    driver.get(url)
-    driver.quit()
 
 
