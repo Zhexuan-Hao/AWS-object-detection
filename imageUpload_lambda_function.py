@@ -4,6 +4,7 @@ import cv2
 import time
 import boto3
 import os
+import base64
 
 # construct the argument parse and parse the arguments
 confthres = 0.3
@@ -14,6 +15,28 @@ yolo_config_bucket = "cloudsnap-yolo-config"
 dynamodb = boto3.resource('dynamodb').Table('cloudsnap-image-database')
 image_bucket = "cloudsnap-image-bucket"
 
+def upload_image(image_str):
+
+    file_path = '/tmp/image.jpg'
+
+    # image loading
+    data = image_str
+
+    # json_data = json.loads(data)
+    decoded_image = base64.b64decode(data)
+
+    # image downloading
+    with open(file_path, 'wb') as file:
+        file.write(decoded_image)
+
+    # image uploading
+    s3 = boto3.client('s3')
+    object_name = image_str
+    object_name = object_name[:32] + ".jpg"
+    object_name = object_name.replace('/', '')
+    s3.upload_file(file_path, image_bucket, object_name)
+
+    return object_name
 
 def get_labels(labels_path):
     # load the COCO class labels our YOLO model was trained on
@@ -152,14 +175,11 @@ def do_object(image_rec):
         print("Exception  {}".format(e))
 
 def lambda_handler(event, context):
-    # create a s3 client
-    image_key = event["Records"][0]["s3"]["object"]["key"]
+
+    image_key = upload_image(event["imageData"]["image"])
 
     fileObj = s3.get_object(Bucket=image_bucket, Key=image_key)
     file_content = fileObj["Body"].read()
-
-    # local_image_path = "/tmp/image.jpg"
-    # s3.download_file(image_bucket, image_key, local_image_path)
 
     image_url = s3.generate_presigned_url(
         "get_object", Params={"Bucket": image_bucket, "Key": image_key}, ExpiresIn=31536000
