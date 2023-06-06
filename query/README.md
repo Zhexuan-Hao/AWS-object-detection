@@ -11,6 +11,13 @@ https://bolnwx1949.execute-api.us-east-1.amazonaws.com/alpha/tags?tag1=bus&tag1c
 Known issues:
 * Empty query string will cause an internal server error.
 
+## Query with file name
+
+Example:
+```
+https://bolnwx1949.execute-api.us-east-1.amazonaws.com/alpha/filename/testImage.jpg
+```
+
 ## Add and Delete
 
 ### Format
