@@ -11,6 +11,25 @@ https://bolnwx1949.execute-api.us-east-1.amazonaws.com/alpha/tags?tag1=bus&tag1c
 Known issues:
 * Empty query string will cause an internal server error.
 
+## Query with image
+
+### Format
+
+* URL: https://bolnwx1949.execute-api.us-east-1.amazonaws.com/alpha/image
+
+* Method: POST
+
+* Body: 
+
+``` json
+{
+  "imageData": {
+    "image": "image base64 string"
+  }
+}
+
+```
+
 ## Query with file name
 
 Example:
