@@ -27,8 +27,6 @@ def sign_in():
                     id_token = re.search(pattern=r"id_token=(.*?)&", string=location).group(1)
                     break
 
-    print("\n id_token:" + id_token)
-
     # Stop the proxy server and quit the driver
     server.stop()
     driver.quit()
