@@ -8,8 +8,7 @@ Example:
 https://bolnwx1949.execute-api.us-east-1.amazonaws.com/alpha/tags?tag1=bus&tag1count=1
 ```
 
-Known issues:
-* Empty query string will cause an internal server error.
+> Note: If there is no tag in the query string, it will return all images.
 
 ## Query with image
 
